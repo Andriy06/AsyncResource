@@ -52,7 +52,7 @@ private:
         : Value(InValue)
     {}
    
-    friend class TAsynResource<FResource>; 
+    friend class TThreadSafe<FResource>; 
 
 public:
     int Read() const { return Value; }
