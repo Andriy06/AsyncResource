@@ -47,7 +47,7 @@ public:
 class FResource
 {
 private:
-    // Can be constructed only as `TAsyncResource`
+    // Can be constructed only as `TThreadSafe`
     FResource(int InValue)
         : Value(InValue)
     {}
@@ -74,7 +74,7 @@ int main()
     TTask<int> Read2 = Resource.Async([](const FResource& Resource) { return Resource.Read(); });
     
     // read-write (RW) tasks take non-const reference and are executed exclusively
-    TTask<void> Write1 = Resource.Async([](FResource& Resource) { Resource.Write(42); });
+    TTask<void> Write = Resource.Async([](FResource& Resource) { Resource.Write(42); });
     
     TArray<int> Results = GetResults(Read1, Read2, Write);
 }
