@@ -20,18 +20,15 @@ public:
     // Executes the given accessor when it's thread-safe and returns the execution result.
     // An accesor must be a callable with signature `ResultType Accessor(const ResourceType&)` or 
     // `ResultType Accessor(ResourceType&)`, for read-only or read-write access respectively.
-    template<typename AccessorType, typename ResultType = 
-        decltype(std::declval<AccessorType>(std::declval<ResourceType>()))>
-    ResultType Sync(FunctorType&& Functor);
+    template<typename AccessorType, typename ResultType = std::invoke_result_t<AccessorType, ResourceType&>>
+    ResultType Sync(AccessorType&& Accessor);
 
     // Executes the given accessor asynchronously and thread-safely for the resource, and returns 
     // a completion handle, that can be used to get the execution result or as a prerequisite 
     // for another task(s).
     // An accesor must be a callable with signature `ResultType Accessor(const ResourceType&)` or 
     // `ResultType Accessor(ResourceType&)`, for read-only or read-write access respectively.
-    template<typename AccessorType, typename ResultType = 
-        decltype(std::declval<AccessorType>(std::declval<ResourceType>()))> // the result of 
-        // `Accessor(Resource)` call
+    template<typename AccessorType, typename ResultType = std::invoke_result_t<AccessorType, ResourceType&>>
     TTask<ResultType> Async(AccessorType&& Accessor);
 
     // `PrerequisitesType` - a single prerequisite task or an iterable collection of `TTask<T>` that 
